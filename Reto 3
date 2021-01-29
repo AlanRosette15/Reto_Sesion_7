@@ -1,0 +1,23 @@
+theurl <- "https://www.glassdoor.com.mx/Sueldos/data-scientist-sueldo-SRCH_KO0,14.htm"
+
+Archivo<-read_html(theurl)
+tabla<-html_nodes(Archivo, "table")
+tabla1 <- html_table(tabla[1], fill = TRUE)
+table <- na.omit(as.data.frame(tabla1))
+str(table)
+
+
+var <- gsub("MXN","",table$Sueldo)
+var <- gsub("[^[:alnum:][:blank:]?]", "", var)
+var <- gsub("mes", "", var)
+var <- as.numeric(var)
+table$Sueldo <- var
+
+var1<- gsub("Sueldos para Data Scientist en ", "", table$Cargo)
+table$Cargo <-var1
+
+max.sueldo <- which.max(table$Sueldo)
+table[max.sueldo,]
+
+min.sueldo <- which.min(table$Sueldo)
+table[min.sueldo,]
